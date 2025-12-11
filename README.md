@@ -21,6 +21,10 @@ tooling—ready to ditch Material and Cupertino**
 
 ## Introduction
 
+> [!IMPORTANT]
+> This is the JappeOS version of `shadcn_flutter`, adapted for JappeOS. It contains new widgets and possibly new theming options.
+> The package name is the same so it's easy to maintain and update.
+
 Welcome to shadcn_flutter, a cohesive UI ecosystem built on the shadcn/ui design
 system for Flutter applications across mobile, web, and desktop. Rather than a
 one‑to‑one design‑system port, this project focuses on delivering a consistent,
