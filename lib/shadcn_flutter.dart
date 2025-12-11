@@ -93,6 +93,7 @@ export 'src/components/layout/card.dart';
 export 'src/components/layout/card_image.dart';
 export 'src/components/layout/collapsible.dart';
 export 'src/components/layout/dialog/alert_dialog.dart';
+export 'src/components/layout/header_bar.dart';
 export 'src/components/layout/media_query.dart';
 export 'src/components/layout/outlined_container.dart';
 export 'src/components/layout/overflow_marquee.dart';

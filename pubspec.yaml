@@ -26,6 +26,7 @@ dependencies:
   gap: ^3.0.1
   expressions: ^0.2.5+2
   animation_kit: ^0.0.2
+  yaru_window: ^0.2.2
 
 dev_dependencies:
   flutter_test:
