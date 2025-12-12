@@ -1424,7 +1424,16 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
                     oldValue.height * size.height);
                 rect = Rect.lerp(value, bounds, t)!;
               }
-              return GroupPositioned.fromRect(rect: rect, child: child!);
+
+              final monitorOffset = _viewport?.monitorOffset ?? Offset.zero;
+              final relativeRect = Rect.fromLTWH(
+                rect.left - monitorOffset.dx,
+                rect.top - monitorOffset.dy,
+                rect.width,
+                rect.height,
+              );
+
+              return GroupPositioned.fromRect(rect: relativeRect, child: child!);
             },
             child: windowContainer,
           );
@@ -1822,6 +1831,7 @@ class Window {
       required bool alwaysOnTop,
       required Size size,
       required bool minifyDragging,
+      required Offset monitorOffset,
       bool ignorePointer = false}) {
     return ListenableBuilder(
         listenable: closed,
@@ -1855,6 +1865,7 @@ class Window {
               alwaysOnTop: alwaysOnTop,
               closed: closed.value,
               minify: minifyDragging,
+              monitorOffset: monitorOffset,
             ),
             child: child,
           );
@@ -2421,6 +2432,7 @@ class _WindowLayerGroup extends StatelessWidget {
                     ignorePointer: false,
                     minifyDragging: isBeingSnapped &&
                         handle._snappingStrategy.value!.shouldMinifyWindow,
+                    monitorOffset: monitorOffset,
                   ),
                 );
               },
@@ -2893,17 +2905,15 @@ class _WindowLayerGroup extends StatelessWidget {
                     windowBounds.height,
                   );
 
-                  return GroupPositioned.fromRect(
-                    rect: relativeBounds,
-                    child: draggingWindow._build(
-                      size: Size(monitor.bounds.width, monitor.bounds.height),
-                      navigator: handle,
-                      focused: true,
-                      alwaysOnTop: windowAlwaysOnTop,
-                      minifyDragging: handle._snappingStrategy.value != null &&
-                          handle._snappingStrategy.value!.shouldMinifyWindow,
-                      ignorePointer: true,
-                    ),
+                  return draggingWindow._build(
+                    size: Size(monitor.bounds.width, monitor.bounds.height),
+                    navigator: handle,
+                    focused: true,
+                    alwaysOnTop: windowAlwaysOnTop,
+                    minifyDragging: handle._snappingStrategy.value != null &&
+                        handle._snappingStrategy.value!.shouldMinifyWindow,
+                    ignorePointer: true,
+                    monitorOffset: monitorOffset,
                   );
                 }
               }
@@ -3155,7 +3165,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                   // Default to primary monitor for unmounted windows
                                   return monitor.id == _primaryMonitorId;
                                 }
-    
+
                                 // For mounted windows, check their monitorId
                                 return w.handle.controller.value.monitorId == monitor.id;
                               }).toList(),
@@ -3545,6 +3555,8 @@ class WindowViewport {
   /// Whether pointer events should be ignored for this window.
   final bool ignorePointer;
 
+  final Offset monitorOffset;
+
   /// Creates a window viewport data object.
   ///
   /// All parameters are required and define the current state of the window
@@ -3566,6 +3578,7 @@ class WindowViewport {
     required this.closed,
     required this.minify,
     required this.ignorePointer,
+    required this.monitorOffset,
   });
 
   @override
@@ -3577,12 +3590,13 @@ class WindowViewport {
         focused == other.focused &&
         alwaysOnTop == other.alwaysOnTop &&
         closed == other.closed &&
-        minify == other.minify;
+        minify == other.minify &&
+        monitorOffset == other.monitorOffset;
   }
 
   @override
   int get hashCode =>
-      Object.hash(size, navigator, focused, alwaysOnTop, closed, minify);
+      Object.hash(size, navigator, focused, alwaysOnTop, closed, minify, monitorOffset);
 }
 
 /// Default window actions widget providing minimize, maximize, and close buttons.
