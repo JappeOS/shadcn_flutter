@@ -2007,36 +2007,20 @@ class _WindowLayerGroup extends StatelessWidget {
               builder: (context) {
                 final window = windows[i];
 
-                // Get the window's absolute bounds
-                final windowBounds = window.mounted
-                  ? window.handle.bounds
-                  : (window.controller?.bounds ?? window.bounds ?? Rect.zero);
-
-                // Convert to monitor-relative bounds
-                final relativeBounds = Rect.fromLTWH(
-                  windowBounds.left - monitorOffset.dx,
-                  windowBounds.top - monitorOffset.dy,
-                  windowBounds.width,
-                  windowBounds.height,
-                );
-
                 // Check if window is being snapped on this monitor
                 final isBeingSnapped = handle._snappingStrategy.value != null &&
                     handle._draggingWindow.value != null &&
                     handle._draggingWindow.value!.window == window;
 
-                return GroupPositioned.fromRect(
-                  rect: relativeBounds,
-                  child: window._build(
-                    size: Size(monitor.bounds.width, monitor.bounds.height),
-                    navigator: handle,
-                    focused: i == 0,
-                    alwaysOnTop: alwaysOnTop,
-                    ignorePointer: false,
-                    minifyDragging: isBeingSnapped &&
-                        handle._snappingStrategy.value!.shouldMinifyWindow,
-                    monitorOffset: monitorOffset,
-                  ),
+                return window._build(
+                  size: Size(monitor.bounds.width, monitor.bounds.height),
+                  navigator: handle,
+                  focused: i == 0,
+                  alwaysOnTop: alwaysOnTop,
+                  ignorePointer: false,
+                  minifyDragging: isBeingSnapped &&
+                      handle._snappingStrategy.value!.shouldMinifyWindow,
+                  monitorOffset: monitorOffset,
                 );
               },
             ),
@@ -2500,14 +2484,6 @@ class _WindowLayerGroup extends StatelessWidget {
                     false;
 
                 if (windowMonitorId == monitor.id && windowAlwaysOnTop == alwaysOnTop) {
-                  final windowBounds = draggingWindow.handle.bounds;
-                  final relativeBounds = Rect.fromLTWH(
-                    windowBounds.left - monitorOffset.dx,
-                    windowBounds.top - monitorOffset.dy,
-                    windowBounds.width,
-                    windowBounds.height,
-                  );
-
                   return draggingWindow._build(
                     size: Size(monitor.bounds.width, monitor.bounds.height),
                     navigator: handle,
@@ -2849,7 +2825,6 @@ class _WindowNavigatorState extends State<WindowNavigator>
     });
   }
 
-  // TODO
   Widget _createBorderSnapStrategy(WindowSnapStrategy snapStrategy, Monitor monitor) {
     return MouseRegion(
       opaque: false,
@@ -2874,25 +2849,6 @@ class _WindowNavigatorState extends State<WindowNavigator>
       },
     );
   }
-
-  /*Widget _createBorderSnapStrategy(
-    WindowSnapStrategy snapStrategy,
-    Monitor monitor,
-  ) {
-    return MouseRegion(
-      opaque: false,
-      hitTestBehavior: HitTestBehavior.translucent,
-      onHover: (event) {
-        _snappingStrategy.value = snapStrategy;
-      },
-      onEnter: (event) {
-        _snappingStrategy.value = snapStrategy;
-      },
-      onExit: (event) {
-        _snappingStrategy.value = null;
-      },
-    );
-  }*/
 
   Widget _createPaneSnapStrategy(
     Size size,
