@@ -372,6 +372,113 @@ class _OutlinedContainerState extends State<OutlinedContainer> {
   }
 }
 
+/// A container widget with dual border outlines and surface effects.
+/// Basically a specialized version of [OutlinedContainer] with two borders.
+class DualBorderOutlinedContainer extends StatefulWidget {
+  final Widget child;
+  final Color? backgroundColor;
+  final Clip clipBehavior;
+  final BorderRadiusGeometry? borderRadius;
+  final List<BoxShadow>? boxShadow;
+  final EdgeInsetsGeometry? padding;
+  final double? surfaceOpacity;
+  final double? surfaceBlur;
+  final double? width;
+  final double? height;
+  final Duration? duration;
+  const DualBorderOutlinedContainer({
+    super.key,
+    required this.child,
+    this.backgroundColor,
+    this.clipBehavior = Clip.antiAlias,
+    this.borderRadius,
+    this.boxShadow,
+    this.padding,
+    this.surfaceOpacity,
+    this.surfaceBlur,
+    this.width,
+    this.height,
+    this.duration,
+  });
+
+  @override
+  State<DualBorderOutlinedContainer> createState() => _DualBorderOutlinedContainerState();
+}
+
+class _DualBorderOutlinedContainerState extends State<DualBorderOutlinedContainer> {
+  final GlobalKey _mainContainerKey = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final scaling = theme.scaling;
+    var borderRadius =
+        widget.borderRadius?.resolve(Directionality.of(context)) ??
+            BorderRadius.circular(theme.radiusXl);
+    var backgroundColor =
+        widget.backgroundColor ?? theme.colorScheme.background;
+    if (widget.surfaceOpacity != null) {
+      backgroundColor = backgroundColor.scaleAlpha(widget.surfaceOpacity!);
+    }
+    final innerBorderColor = theme.colorScheme.muted;
+    const outerBorderColor = Colors.black;
+    Widget childWidget = AnimatedContainer(
+      key: _mainContainerKey,
+      duration: widget.duration ?? Duration.zero,
+      width: widget.width,
+      height: widget.height,
+      foregroundDecoration: BoxDecoration(
+        border: Border.all(
+          color: outerBorderColor,
+          width: (1 * scaling),
+          style: BorderStyle.solid,
+          strokeAlign: BorderSide.strokeAlignOutside,
+        ),
+        borderRadius: borderRadius,
+      ),
+      child: AnimatedContainer(
+        duration: widget.duration ?? Duration.zero,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          boxShadow: widget.boxShadow,
+          borderRadius: borderRadius,
+        ),
+        foregroundDecoration: BoxDecoration(
+          border: Border.all(
+            color: innerBorderColor,
+            width: (1 * scaling),
+            style: BorderStyle.solid,
+            strokeAlign: BorderSide.strokeAlignInside,
+          ),
+          borderRadius: borderRadius,
+        ),
+        child: AnimatedContainer(
+          duration: widget.duration ?? Duration.zero,
+          padding: widget.padding,
+          clipBehavior: widget.clipBehavior,
+          decoration: BoxDecoration(
+            borderRadius: subtractByBorder(
+              borderRadius,
+              1 * scaling,
+            ),
+          ),
+          child: widget.child,
+        ),
+      ),
+    );
+    if (widget.surfaceBlur != null && widget.surfaceBlur! > 0) {
+      childWidget = SurfaceBlur(
+        surfaceBlur: widget.surfaceBlur!,
+        borderRadius: subtractByBorder(
+          borderRadius,
+          1 * scaling,
+        ),
+        child: childWidget,
+      );
+    }
+    return childWidget;
+  }
+}
+
 /// Properties for defining a dashed line appearance.
 ///
 /// Encapsulates the visual properties of a dashed line including dash width,
