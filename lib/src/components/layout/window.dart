@@ -2391,8 +2391,12 @@ class _WindowLayerGroup extends StatelessWidget {
           if (windows[i] != handle._draggingWindow.value?.window)
             Builder(
               builder: (context) {
+                final window = windows[i];
+
                 // Get the window's absolute bounds
-                final windowBounds = windows[i].handle.bounds;
+                final windowBounds = window.mounted
+                  ? window.handle.bounds
+                  : (window.controller?.bounds ?? window.bounds ?? Rect.zero);
 
                 // Convert to monitor-relative bounds
                 final relativeBounds = Rect.fromLTWH(
@@ -2405,11 +2409,11 @@ class _WindowLayerGroup extends StatelessWidget {
                 // Check if window is being snapped on this monitor
                 final isBeingSnapped = handle._snappingStrategy.value != null &&
                     handle._draggingWindow.value != null &&
-                    handle._draggingWindow.value!.window == windows[i];
+                    handle._draggingWindow.value!.window == window;
 
                 return GroupPositioned.fromRect(
                   rect: relativeBounds,
-                  child: windows[i]._build(
+                  child: window._build(
                     size: Size(monitor.bounds.width, monitor.bounds.height),
                     navigator: handle,
                     focused: i == 0,
@@ -3105,8 +3109,24 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                 Size(monitor.bounds.width, monitor.bounds.height),
                               ),
                               windows: _windows.where((w) {
-                                //if (!w.mounted) return false;
+                                // For dynamic monitor, include all windows
                                 if (_useDynamicMonitor) return true;
+
+                                // For static monitors, check if window is mounted first
+                                if (!w.mounted) {
+                                  // If not mounted yet, assign to this monitor if it's primary
+                                  // or if window position falls within this monitor
+                                  if (w.controller != null) {
+                                    final windowBounds = w.controller!.bounds;
+                                    if (monitor.containsPoint(windowBounds.center)) {
+                                      return true;
+                                    }
+                                  }
+                                  // Default to primary monitor for unmounted windows
+                                  return monitor.id == _primaryMonitorId;
+                                }
+
+                                // For mounted windows, check their monitorId
                                 return w.handle.controller.value.monitorId == monitor.id;
                               }).toList(),
                               handle: this,
@@ -3119,8 +3139,24 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                 Size(monitor.bounds.width, monitor.bounds.height),
                               ),
                               windows: _topWindows.where((w) {
-                                //if (!w.mounted) return false;
+                                // For dynamic monitor, include all windows
                                 if (_useDynamicMonitor) return true;
+
+                                // For static monitors, check if window is mounted first
+                                if (!w.mounted) {
+                                  // If not mounted yet, assign to this monitor if it's primary
+                                  // or if window position falls within this monitor
+                                  if (w.controller != null) {
+                                    final windowBounds = w.controller!.bounds;
+                                    if (monitor.containsPoint(windowBounds.center)) {
+                                      return true;
+                                    }
+                                  }
+                                  // Default to primary monitor for unmounted windows
+                                  return monitor.id == _primaryMonitorId;
+                                }
+    
+                                // For mounted windows, check their monitorId
                                 return w.handle.controller.value.monitorId == monitor.id;
                               }).toList(),
                               handle: this,
