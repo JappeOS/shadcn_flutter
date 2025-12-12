@@ -3105,7 +3105,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                 Size(monitor.bounds.width, monitor.bounds.height),
                               ),
                               windows: _windows.where((w) {
-                                if (!w.mounted) return false;
+                                //if (!w.mounted) return false;
                                 if (_useDynamicMonitor) return true;
                                 return w.handle.controller.value.monitorId == monitor.id;
                               }).toList(),
@@ -3119,7 +3119,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                 Size(monitor.bounds.width, monitor.bounds.height),
                               ),
                               windows: _topWindows.where((w) {
-                                if (!w.mounted) return false;
+                                //if (!w.mounted) return false;
                                 if (_useDynamicMonitor) return true;
                                 return w.handle.controller.value.monitorId == monitor.id;
                               }).toList(),
