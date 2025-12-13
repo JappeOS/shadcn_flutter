@@ -1413,7 +1413,7 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
                 var monitor = _viewport?.navigator._state.getMonitor(monitorId);
                 var monitorSize = monitor?.bounds.size ?? (_viewport?.size ?? Size.zero);
                 var monitorOffset = monitor?.bounds.topLeft ?? Offset.zero;
-          
+
                 // Convert relative bounds to absolute bounds
                 var value = Rect.fromLTWH(
                     monitorOffset.dx + (newValue.left * monitorSize.width),
@@ -1427,7 +1427,7 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
                 var monitor = _viewport?.navigator._state.getMonitor(monitorId);
                 var monitorSize = monitor?.bounds.size ?? (_viewport?.size ?? Size.zero);
                 var monitorOffset = monitor?.bounds.topLeft ?? Offset.zero;
-          
+
                 var value = Rect.fromLTWH(
                     monitorOffset.dx + (oldValue.left * monitorSize.width),
                     monitorOffset.dy + (oldValue.top * monitorSize.height),
@@ -2823,7 +2823,6 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                       ),
                                   shouldMinifyWindow: false,
                                 ),
-                                monitor,
                               ),
                             ),
                             GroupPositioned(
@@ -2843,7 +2842,6 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                       ),
                                   shouldMinifyWindow: false,
                                 ),
-                                monitor,
                               ),
                             ),
                             GroupPositioned(
@@ -2863,7 +2861,6 @@ class _WindowNavigatorState extends State<WindowNavigator>
                                       ),
                                   shouldMinifyWindow: false,
                                 ),
-                                monitor,
                               ),
                             ),
                           ],
