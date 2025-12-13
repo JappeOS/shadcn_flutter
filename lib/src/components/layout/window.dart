@@ -1408,6 +1408,38 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
             builder: (context, oldValue, newValue, t, child) {
               var rect = bounds;
               if (newValue != null) {
+                // Get the monitor for this window
+                var monitorId = state.monitorId;
+                var monitor = _viewport?.navigator._state.getMonitor(monitorId);
+                var monitorSize = monitor?.bounds.size ?? (_viewport?.size ?? Size.zero);
+                var monitorOffset = monitor?.bounds.topLeft ?? Offset.zero;
+          
+                // Convert relative bounds to absolute bounds
+                var value = Rect.fromLTWH(
+                    monitorOffset.dx + (newValue.left * monitorSize.width),
+                    monitorOffset.dy + (newValue.top * monitorSize.height),
+                    newValue.width * monitorSize.width,
+                    newValue.height * monitorSize.height);
+                rect = Rect.lerp(bounds, value, t)!;
+              } else if (oldValue != null) {
+                // Restoring from maximized
+                var monitorId = state.monitorId;
+                var monitor = _viewport?.navigator._state.getMonitor(monitorId);
+                var monitorSize = monitor?.bounds.size ?? (_viewport?.size ?? Size.zero);
+                var monitorOffset = monitor?.bounds.topLeft ?? Offset.zero;
+          
+                var value = Rect.fromLTWH(
+                    monitorOffset.dx + (oldValue.left * monitorSize.width),
+                    monitorOffset.dy + (oldValue.top * monitorSize.height),
+                    oldValue.width * monitorSize.width,
+                    oldValue.height * monitorSize.height);
+                rect = Rect.lerp(value, bounds, t)!;
+              }
+              return GroupPositioned.fromRect(rect: rect, child: child!);
+            },
+            /*builder: (context, oldValue, newValue, t, child) {
+              var rect = bounds;
+              if (newValue != null) {
                 var size = _viewport?.size ?? Size.zero;
                 var value = Rect.fromLTWH(
                     newValue.left * size.width,
@@ -1434,7 +1466,7 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
               );
 
               return GroupPositioned.fromRect(rect: relativeRect, child: child!);
-            },
+            },*/
             child: windowContainer,
           );
         },
@@ -2539,13 +2571,34 @@ class _WindowNavigatorState extends State<WindowNavigator>
         _draggingWindow.value!.window != handle) {
       return;
     }
+
     var snapping = _snappingStrategy.value;
     if (snapping != null && handle.mounted) {
-      handle.handle.maximized = snapping.relativeBounds;
+      final center = handle.handle.bounds.center;
+      final monitor = getMonitorAtPoint(center);
+
+      if (monitor != null) {
+        // If snapping.relativeBounds is already relative (0.0-1.0), use it directly
+        // If it's absolute, convert it to relative for this monitor
+        Rect relativeBounds;
+        if (snapping.relativeBounds.left >= 0 && snapping.relativeBounds.left <= 1 &&
+            snapping.relativeBounds.width >= 0 && snapping.relativeBounds.width <= 1) {
+          // Already relative
+          relativeBounds = snapping.relativeBounds;
+        } else {
+          // Convert absolute to relative
+          relativeBounds = monitor.toRelativeBounds(snapping.relativeBounds);
+        }
+
+        handle.handle.maximized = relativeBounds;
+
+        // Update the window's monitor
+        handle.handle.controller.value = handle.handle.controller.value.copyWith(
+          monitorId: () => monitor.id,
+        );
+      }
     }
-    if (!_useDynamicMonitor) {
-      _updateWindowMonitor(handle);
-    }
+
     _draggingWindow.value = null;
     _hoveringTopSnapper.value = false;
     _snappingStrategy.value = null;
@@ -2825,7 +2878,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
     });
   }
 
-  Widget _createBorderSnapStrategy(WindowSnapStrategy snapStrategy, Monitor monitor) {
+  /*Widget _createBorderSnapStrategy(WindowSnapStrategy snapStrategy, Monitor monitor) {
     return MouseRegion(
       opaque: false,
       hitTestBehavior: HitTestBehavior.translucent,
@@ -2843,6 +2896,22 @@ class _WindowNavigatorState extends State<WindowNavigator>
           shouldMinifyWindow: snapStrategy.shouldMinifyWindow,
         );
         _snappingStrategy.value = absoluteStrategy;
+      },
+      onExit: (event) {
+        _snappingStrategy.value = null;
+      },
+    );
+  }*/
+
+  Widget _createBorderSnapStrategy(WindowSnapStrategy snapStrategy) {
+    return MouseRegion(
+      opaque: false,
+      hitTestBehavior: HitTestBehavior.translucent,
+      onHover: (event) {
+        _snappingStrategy.value = snapStrategy; // Keep as relative
+      },
+      onEnter: (event) {
+        _snappingStrategy.value = snapStrategy; // Keep as relative
       },
       onExit: (event) {
         _snappingStrategy.value = null;
