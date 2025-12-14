@@ -2146,349 +2146,304 @@ class _WindowLayerGroup extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   mainAxisSize: MainAxisSize.min,
                                   spacing: 8 * theme.scaling,
-                                  children: [
-                                    // 0.5 | 0.5
-                                    AspectRatio(
-                                      aspectRatio: monitor.bounds.width / monitor.bounds.height,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final size = constraints.biggest;
-                                          return GroupWidget(
-                                            children: [
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height,
+                                                                        children: [
+                                        // 0.5 | 0.5
+                                        AspectRatio(
+                                          aspectRatio:
+                                              constraints.biggest.width /
+                                                  constraints.biggest.height,
+                                          child: LayoutBuilder(
+                                              builder: (context, constraints) {
+                                            final size = constraints.biggest;
+                                            return GroupWidget(
+                                              children: [
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0, 0.5, 1),
                                                   ),
+                                                  monitor,
+                                                  topRight: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                topRight: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 0.5,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0.5, 0, 0.5, 1),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                bottomLeft: true,
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    // 0.7 | 0.3
-                                    AspectRatio(
-                                      aspectRatio: monitor.bounds.width / monitor.bounds.height,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final size = constraints.biggest;
-                                          return GroupWidget(
-                                            children: [
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.7,
-                                                    monitor.bounds.height,
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                        // 0.7 | 0.3
+                                        AspectRatio(
+                                          aspectRatio:
+                                              constraints.biggest.width /
+                                                  constraints.biggest.height,
+                                          child: LayoutBuilder(
+                                              builder: (context, constraints) {
+                                            final size = constraints.biggest;
+                                            return GroupWidget(
+                                              children: [
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0, 0.7, 1),
                                                   ),
+                                                  monitor,
+                                                  topRight: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                topRight: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 0.7,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.3,
-                                                    monitor.bounds.height,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0.7, 0, 0.3, 1),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                bottomLeft: true,
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    // (0.5, 1) | (0.5, 0.5)
-                                    //          | (0.5, 0.5)
-                                    AspectRatio(
-                                      aspectRatio: monitor.bounds.width / monitor.bounds.height,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final size = constraints.biggest;
-                                          return GroupWidget(
-                                            children: [
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height,
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                        // (0.5, 1) | (0.5, 0.5)
+                                        //          | (0.5, 0.5)
+                                        AspectRatio(
+                                          aspectRatio:
+                                              constraints.biggest.width /
+                                                  constraints.biggest.height,
+                                          child: LayoutBuilder(
+                                              builder: (context, constraints) {
+                                            final size = constraints.biggest;
+                                            return GroupWidget(
+                                              children: [
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0.0, 0.5, 1.0),
                                                   ),
+                                                  monitor,
+                                                  topRight: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                topRight: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 0.5,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height * 0.5,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0.5, 0, 0.5, 0.5),
                                                   ),
+                                                  monitor,
+                                                  bottomLeft: true,
+                                                  bottomRight: true,
+                                                  topLeft: true,
                                                 ),
-                                                monitor,
-                                                bottomLeft: true,
-                                                bottomRight: true,
-                                                topLeft: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 0.5,
-                                                    monitorOffset.dy + monitor.bounds.height * 0.5,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height * 0.5,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0.5, 0.5, 0.5, 0.5),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  topRight: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                topRight: true,
-                                                bottomLeft: true,
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    // (0.5, 0.5) | (0.5, 0.5)
-                                    // (0.5, 0.5) | (0.5, 0.5)
-                                    AspectRatio(
-                                      aspectRatio: monitor.bounds.width / monitor.bounds.height,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final size = constraints.biggest;
-                                          return GroupWidget(
-                                            children: [
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height * 0.5,
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                        // (0.5, 0.5) | (0.5, 0.5)
+                                        // (0.5, 0.5) | (0.5, 0.5)
+                                        AspectRatio(
+                                          aspectRatio:
+                                              constraints.biggest.width /
+                                                  constraints.biggest.height,
+                                          child: LayoutBuilder(
+                                              builder: (context, constraints) {
+                                            final size = constraints.biggest;
+                                            return GroupWidget(
+                                              children: [
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0, 0.5, 0.5),
                                                   ),
+                                                  monitor,
+                                                  bottomRight: true,
+                                                  topRight: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                bottomRight: true,
-                                                topRight: true,
-                                                bottomLeft: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 0.5,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height * 0.5,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0.5, 0, 0.5, 0.5),
                                                   ),
+                                                  monitor,
+                                                  bottomLeft: true,
+                                                  topLeft: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                bottomLeft: true,
-                                                topLeft: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy + monitor.bounds.height * 0.5,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height * 0.5,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0.5, 0.5, 0.5),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  topRight: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                topRight: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 0.5,
-                                                    monitorOffset.dy + monitor.bounds.height * 0.5,
-                                                    monitor.bounds.width * 0.5,
-                                                    monitor.bounds.height * 0.5,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0.5, 0.5, 0.5, 0.5),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  topRight: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                topRight: true,
-                                                bottomLeft: true,
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    // 1/3 | 1/3 | 1/3
-                                    AspectRatio(
-                                      aspectRatio: monitor.bounds.width / monitor.bounds.height,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final size = constraints.biggest;
-                                          return GroupWidget(
-                                            children: [
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width / 3,
-                                                    monitor.bounds.height,
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                        // 1/3 | 1/3 | 1/3
+                                        AspectRatio(
+                                          aspectRatio:
+                                              constraints.biggest.width /
+                                                  constraints.biggest.height,
+                                          child: LayoutBuilder(
+                                              builder: (context, constraints) {
+                                            final size = constraints.biggest;
+                                            return GroupWidget(
+                                              children: [
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0, 1 / 3, 1),
                                                   ),
+                                                  monitor,
+                                                  topRight: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                topRight: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width / 3,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width / 3,
-                                                    monitor.bounds.height,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            1 / 3, 0, 1 / 3, 1),
                                                   ),
+                                                  monitor,
+                                                  allLeft: true,
+                                                  allRight: true,
                                                 ),
-                                                monitor,
-                                                allLeft: true,
-                                                allRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 2 / 3,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width / 3,
-                                                    monitor.bounds.height,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            2 / 3, 0, 1 / 3, 1),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                bottomLeft: true,
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    // 2/7 | 3/7 | 2/7
-                                    AspectRatio(
-                                      aspectRatio: monitor.bounds.width / monitor.bounds.height,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final size = constraints.biggest;
-                                          return GroupWidget(
-                                            children: [
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 2 / 7,
-                                                    monitor.bounds.height,
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                        // 2/7 | 3/7 | 2/7
+                                        AspectRatio(
+                                          aspectRatio:
+                                              constraints.biggest.width /
+                                                  constraints.biggest.height,
+                                          child: LayoutBuilder(
+                                              builder: (context, constraints) {
+                                            final size = constraints.biggest;
+                                            return GroupWidget(
+                                              children: [
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            0, 0, 2 / 7, 1),
                                                   ),
+                                                  monitor,
+                                                  topRight: true,
+                                                  bottomRight: true,
                                                 ),
-                                                monitor,
-                                                topRight: true,
-                                                bottomRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 2 / 7,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 3 / 7,
-                                                    monitor.bounds.height,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            2 / 7, 0, 3 / 7, 1),
                                                   ),
+                                                  monitor,
+                                                  allLeft: true,
+                                                  allRight: true,
                                                 ),
-                                                monitor,
-                                                allLeft: true,
-                                                allRight: true,
-                                              ),
-                                              createPaneSnapStrategy(
-                                                size,
-                                                theme,
-                                                WindowSnapStrategy(
-                                                  relativeBounds: Rect.fromLTWH(
-                                                    monitorOffset.dx + monitor.bounds.width * 5 / 7,
-                                                    monitorOffset.dy,
-                                                    monitor.bounds.width * 2 / 7,
-                                                    monitor.bounds.height,
+                                                createPaneSnapStrategy(
+                                                  size,
+                                                  theme,
+                                                  const WindowSnapStrategy(
+                                                    relativeBounds:
+                                                        Rect.fromLTWH(
+                                                            5 / 7, 0, 2 / 7, 1),
                                                   ),
+                                                  monitor,
+                                                  topLeft: true,
+                                                  bottomLeft: true,
                                                 ),
-                                                monitor,
-                                                topLeft: true,
-                                                bottomLeft: true,
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
+                                              ],
+                                            );
+                                          }),
+                                        ),
+                                      ],
                                 ),
                               ),
                             ),
@@ -2578,19 +2533,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
       final monitor = getMonitorAtPoint(center);
 
       if (monitor != null) {
-        // If snapping.relativeBounds is already relative (0.0-1.0), use it directly
-        // If it's absolute, convert it to relative for this monitor
-        Rect relativeBounds;
-        if (snapping.relativeBounds.left >= 0 && snapping.relativeBounds.left <= 1 &&
-            snapping.relativeBounds.width >= 0 && snapping.relativeBounds.width <= 1) {
-          // Already relative
-          relativeBounds = snapping.relativeBounds;
-        } else {
-          // Convert absolute to relative
-          relativeBounds = monitor.toRelativeBounds(snapping.relativeBounds);
-        }
-
-        handle.handle.maximized = relativeBounds;
+        handle.handle.maximized = snapping.relativeBounds;
 
         // Update the window's monitor
         handle.handle.controller.value = handle.handle.controller.value.copyWith(
@@ -2812,15 +2755,8 @@ class _WindowNavigatorState extends State<WindowNavigator>
                               right: 0,
                               height: titleBarHeight,
                               child: _createBorderSnapStrategy(
-                                WindowSnapStrategy(
-                                  relativeBounds: _useDynamicMonitor
-                                    ? const Rect.fromLTWH(0, 0, 1, 1)
-                                    : Rect.fromLTWH(
-                                        monitor.bounds.left,
-                                        monitor.bounds.top,
-                                        monitor.bounds.width,
-                                        monitor.bounds.height,
-                                      ),
+                                const WindowSnapStrategy(
+                                  relativeBounds: Rect.fromLTWH(0, 0, 1, 1),
                                   shouldMinifyWindow: false,
                                 ),
                               ),
@@ -2831,15 +2767,8 @@ class _WindowNavigatorState extends State<WindowNavigator>
                               left: 0,
                               width: titleBarHeight,
                               child: _createBorderSnapStrategy(
-                                WindowSnapStrategy(
-                                  relativeBounds: _useDynamicMonitor
-                                    ? const Rect.fromLTWH(0, 0, 0.5, 1)
-                                    : Rect.fromLTWH(
-                                        monitor.bounds.left,
-                                        monitor.bounds.top,
-                                        monitor.bounds.width * 0.5,
-                                        monitor.bounds.height,
-                                      ),
+                                const WindowSnapStrategy(
+                                  relativeBounds: Rect.fromLTWH(0, 0, 0.5, 1),
                                   shouldMinifyWindow: false,
                                 ),
                               ),
@@ -2850,15 +2779,8 @@ class _WindowNavigatorState extends State<WindowNavigator>
                               right: 0,
                               width: titleBarHeight,
                               child: _createBorderSnapStrategy(
-                                WindowSnapStrategy(
-                                  relativeBounds: _useDynamicMonitor
-                                    ? const Rect.fromLTWH(0.5, 0, 0.5, 1)
-                                    : Rect.fromLTWH(
-                                        monitor.bounds.left + monitor.bounds.width * 0.5,
-                                        monitor.bounds.top,
-                                        monitor.bounds.width * 0.5,
-                                        monitor.bounds.height,
-                                      ),
+                                const WindowSnapStrategy(
+                                  relativeBounds: Rect.fromLTWH(0.5, 0, 0.5, 1),
                                   shouldMinifyWindow: false,
                                 ),
                               ),
@@ -2875,40 +2797,15 @@ class _WindowNavigatorState extends State<WindowNavigator>
     });
   }
 
-  /*Widget _createBorderSnapStrategy(WindowSnapStrategy snapStrategy, Monitor monitor) {
-    return MouseRegion(
-      opaque: false,
-      hitTestBehavior: HitTestBehavior.translucent,
-      onHover: (event) {
-        // Convert relative bounds to absolute bounds for this monitor
-        final absoluteStrategy = WindowSnapStrategy(
-          relativeBounds: monitor.toAbsoluteBounds(snapStrategy.relativeBounds),
-          shouldMinifyWindow: snapStrategy.shouldMinifyWindow,
-        );
-        _snappingStrategy.value = absoluteStrategy;
-      },
-      onEnter: (event) {
-        final absoluteStrategy = WindowSnapStrategy(
-          relativeBounds: monitor.toAbsoluteBounds(snapStrategy.relativeBounds),
-          shouldMinifyWindow: snapStrategy.shouldMinifyWindow,
-        );
-        _snappingStrategy.value = absoluteStrategy;
-      },
-      onExit: (event) {
-        _snappingStrategy.value = null;
-      },
-    );
-  }*/
-
   Widget _createBorderSnapStrategy(WindowSnapStrategy snapStrategy) {
     return MouseRegion(
       opaque: false,
       hitTestBehavior: HitTestBehavior.translucent,
       onHover: (event) {
-        _snappingStrategy.value = snapStrategy; // Keep as relative
+        _snappingStrategy.value = snapStrategy;
       },
       onEnter: (event) {
-        _snappingStrategy.value = snapStrategy; // Keep as relative
+        _snappingStrategy.value = snapStrategy;
       },
       onExit: (event) {
         _snappingStrategy.value = null;
@@ -2920,7 +2817,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
     Size size,
     ThemeData theme,
     WindowSnapStrategy snapStrategy,
-    Monitor monitor, // Add monitor parameter
+    Monitor monitor,
     {bool topLeft = false,
     bool topRight = false,
     bool bottomLeft = false,
@@ -2932,26 +2829,15 @@ class _WindowNavigatorState extends State<WindowNavigator>
   ) {
     const double gap = 2;
 
-    // Convert absolute bounds to thumbnail-relative bounds
-    // snapStrategy.relativeBounds contains absolute screen coordinates
-    // size is the thumbnail size in the snap bar
-    // monitor.bounds is the actual monitor size
+    // snapStrategy.relativeBounds is now in 0.0-1.0 range
+    // size is the thumbnail size
+    // Scale relative bounds to thumbnail size
+    var left = snapStrategy.relativeBounds.left * size.width;
+    var top = snapStrategy.relativeBounds.top * size.height;
+    var width = snapStrategy.relativeBounds.width * size.width;
+    var height = snapStrategy.relativeBounds.height * size.height;
 
-    final monitorOffset = monitor.bounds.topLeft;
-
-    // First, convert absolute bounds to monitor-relative
-    var left = (snapStrategy.relativeBounds.left - monitorOffset.dx) / monitor.bounds.width;
-    var top = (snapStrategy.relativeBounds.top - monitorOffset.dy) / monitor.bounds.height;
-    var width = snapStrategy.relativeBounds.width / monitor.bounds.width;
-    var height = snapStrategy.relativeBounds.height / monitor.bounds.height;
-
-    // Now scale to thumbnail size
-    left = left * size.width;
-    top = top * size.height;
-    width = width * size.width;
-    height = height * size.height;
-
-    // Apply gaps for visual separation
+    // Apply gaps for visual separation (unchanged)
     if (topLeft && topRight) {
       top += gap;
       height -= gap;
@@ -3007,12 +2893,7 @@ class _WindowNavigatorState extends State<WindowNavigator>
     }
 
     return GroupPositioned.fromRect(
-      rect: Rect.fromLTWH(
-        left,
-        top,
-        width,
-        height,
-      ),
+      rect: Rect.fromLTWH(left, top, width, height),
       child: _SnapHover(
         topLeft: topLeft || allLeft || allTop,
         topRight: topRight || allRight || allTop,
