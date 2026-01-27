@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:shadcn_flutter/shadcn_flutter_extension.dart';
+
 import '../../../shadcn_flutter.dart';
 
 /// A widget that applies a blur effect to its background.
@@ -419,8 +421,12 @@ class _DualBorderOutlinedContainerState extends State<DualBorderOutlinedContaine
     if (widget.surfaceOpacity != null) {
       backgroundColor = backgroundColor.scaleAlpha(widget.surfaceOpacity!);
     }
-    final innerBorderColor = theme.colorScheme.muted;
-    const outerBorderColor = Colors.black;
+    final innerBorderColor = theme.colorScheme.isDark
+        ? Colors.white.withAlpha(200)
+        : Colors.white;
+    final outerBorderColor = theme.colorScheme.isDark
+        ? Colors.black
+        : Colors.gray[500];
     Widget childWidget = AnimatedContainer(
       key: _mainContainerKey,
       duration: widget.duration ?? Duration.zero,
