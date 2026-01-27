@@ -422,7 +422,7 @@ class _DualBorderOutlinedContainerState extends State<DualBorderOutlinedContaine
       backgroundColor = backgroundColor.scaleAlpha(widget.surfaceOpacity!);
     }
     final innerBorderColor = theme.colorScheme.isDark
-        ? const Color.fromARGB(90, 255, 255, 255)
+        ? const Color.fromARGB(85, 197, 197, 197)
         : Colors.white;
     final outerBorderColor = theme.colorScheme.isDark
         ? Colors.black
