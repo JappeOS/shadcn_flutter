@@ -422,11 +422,11 @@ class _DualBorderOutlinedContainerState extends State<DualBorderOutlinedContaine
       backgroundColor = backgroundColor.scaleAlpha(widget.surfaceOpacity!);
     }
     final innerBorderColor = theme.colorScheme.isDark
-        ? Colors.white.withAlpha(200)
+        ? const Color.fromARGB(90, 255, 255, 255)
         : Colors.white;
     final outerBorderColor = theme.colorScheme.isDark
         ? Colors.black
-        : Colors.gray[500];
+        : Colors.gray[400];
     Widget childWidget = AnimatedContainer(
       key: _mainContainerKey,
       duration: widget.duration ?? Duration.zero,
