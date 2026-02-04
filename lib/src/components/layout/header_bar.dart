@@ -6,7 +6,7 @@ import 'package:shadcn_flutter/shadcn_flutter_extension.dart';
 import 'package:yaru_window/yaru_window.dart';
 
 const _kHeaderBarHeroTag = '<shadeui headerbar hero tag>';
-const _kDefaultHeaderBarHeight = 35.0;
+const _kDefaultHeaderbarHeight = 35.0;
 const _kPopulatedHeaderbarHeight = 45.0;
 
 /// A widget that displays a header bar with window controls.
@@ -80,7 +80,7 @@ class HeaderBar extends StatefulWidget implements PreferredSizeWidget {
   final Object? heroTag;
 
   @override
-  Size get preferredSize => Size(0, (leading == null && actions == null) ? _kDefaultHeaderBarHeight : _kPopulatedHeaderbarHeight);
+  Size get preferredSize => Size(0, (leading == null && actions == null) ? _kDefaultHeaderbarHeight : _kPopulatedHeaderbarHeight);
 
   /// Creates a [HeaderBar].
   const HeaderBar(
@@ -123,7 +123,7 @@ class _HeaderBarState extends State<HeaderBar> {
       if (!states.contains(WidgetState.focused)) {
         return theme.colorScheme.background;
       }
-      return light ? theme.colorScheme.background.withLuminance(0.5) : theme.colorScheme.background.withLuminance(0.5); // TODO
+      return light ? theme.colorScheme.background/*.withLuminance(0.5)*/ : theme.colorScheme.background/*.withLuminance(0.5)*/; // TODO
     });
     final backgroundColor = WidgetStateProperty.resolveAs(widget.backgroundColor, states) ?? defaultBackgroundColor.resolve(states);
     final foregroundColor = theme.colorScheme.foreground;
@@ -283,16 +283,17 @@ class _ShadeWindowControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scale = Theme.of(context).scaling;
     return Padding(
       padding: const EdgeInsets.all(2.5),
       child: SizedBox(
-        width: 30,
-        height: 30,
+        width: 25 * scale,
+        height: 25 * scale,
         child: IconButton.secondary(
           onPressed: onTap,
           shape: ButtonShape.circle,
-          density: ButtonDensity.icon,
-          icon: Icon(icon),
+          density: ButtonDensity.compact,
+          icon: Icon(icon, /*grade: -1,*/ size: 14 * scale),
         ),
       ),
     );
@@ -439,7 +440,7 @@ class WindowHeaderBar extends StatelessWidget implements PreferredSizeWidget {
   final Object? heroTag;
 
   @override
-  Size get preferredSize => Size(0, (leading == null && actions == null) ? _kDefaultHeaderBarHeight : _kPopulatedHeaderbarHeight);
+  Size get preferredSize => Size(0, (leading == null && actions == null) ? _kDefaultHeaderbarHeight : _kPopulatedHeaderbarHeight);
 
   /// Ensures that the window is initialized.
   static Future<void> ensureInitialized() {
