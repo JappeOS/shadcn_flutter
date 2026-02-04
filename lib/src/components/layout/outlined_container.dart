@@ -381,6 +381,7 @@ class DualBorderOutlinedContainer extends StatefulWidget {
   final Color? backgroundColor;
   final Clip clipBehavior;
   final BorderRadiusGeometry? borderRadius;
+  final bool hasBorder;
   final List<BoxShadow>? boxShadow;
   final EdgeInsetsGeometry? padding;
   final double? surfaceOpacity;
@@ -394,6 +395,7 @@ class DualBorderOutlinedContainer extends StatefulWidget {
     this.backgroundColor,
     this.clipBehavior = Clip.antiAlias,
     this.borderRadius,
+    this.hasBorder = true,
     this.boxShadow,
     this.padding,
     this.surfaceOpacity,
@@ -433,12 +435,12 @@ class _DualBorderOutlinedContainerState extends State<DualBorderOutlinedContaine
       width: widget.width,
       height: widget.height,
       foregroundDecoration: BoxDecoration(
-        border: Border.all(
+        border: widget.hasBorder ? Border.all(
           color: outerBorderColor,
           width: (1 * scaling),
           style: BorderStyle.solid,
           strokeAlign: BorderSide.strokeAlignOutside,
-        ),
+        ) : null,
         borderRadius: borderRadius,
       ),
       child: AnimatedContainer(
@@ -449,12 +451,12 @@ class _DualBorderOutlinedContainerState extends State<DualBorderOutlinedContaine
           borderRadius: borderRadius,
         ),
         foregroundDecoration: BoxDecoration(
-          border: Border.all(
+          border: widget.hasBorder ? Border.all(
             color: innerBorderColor,
             width: (1 * scaling),
             style: BorderStyle.solid,
             strokeAlign: BorderSide.strokeAlignInside,
-          ),
+          ) : null,
           borderRadius: borderRadius,
         ),
         child: AnimatedContainer(
