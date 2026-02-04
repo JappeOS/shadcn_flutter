@@ -971,6 +971,8 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
   WindowViewport? _viewport;
   Window? _entry;
   Alignment? _dragAlignment;
+  int? _dragPointer;
+  Offset? _lastGlobalPos;
 
   void _initializeController() {
     if (widget.controller != null) {
@@ -1121,50 +1123,59 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
                             }
                           }
                         : null,
-                    child: GestureDetector(
+                    child: Listener(
                       behavior: HitTestBehavior.translucent,
-                      onPanStart: (details) {
-                        var localPosition = details.localPosition;
-                        var bounds = this.bounds;
-                        var max = maximized;
-                        var size = _viewport?.size;
+
+                      onPointerDown: (event) {
+                        // Only allow one drag pointer
+                        if (_dragPointer != null) return;
+                        _dragPointer = event.pointer;
+                        _lastGlobalPos = event.position;
+
+                        final localPosition = event.localPosition;
+                        Rect bounds = this.bounds;
+
+                        final max = maximized;
+                        final size = _viewport?.size;
                         if (max != null && size != null) {
                           bounds = Rect.fromLTWH(
-                              max.left * size.width,
-                              max.top * size.height,
-                              max.width * size.width,
-                              max.height * size.height);
+                            max.left * size.width,
+                            max.top * size.height,
+                            max.width * size.width,
+                            max.height * size.height,
+                          );
                         }
-                        var alignX = lerpDouble(
-                            -1, 1, (localPosition.dx / bounds.width))!;
-                        var alignY = lerpDouble(
-                            -1, 1, (localPosition.dy / bounds.height))!;
-                        _dragAlignment = Alignment(
-                          alignX,
-                          alignY,
-                        );
+
+                        final alignX = lerpDouble(-1, 1, localPosition.dx / bounds.width)!;
+                        final alignY = lerpDouble(-1, 1, localPosition.dy / bounds.height)!;
+
+                        _dragAlignment = Alignment(alignX, alignY);
+
                         if (_entry != null) {
                           _viewport?.navigator._state._startDraggingWindow(
                             _entry!,
-                            details.globalPosition,
+                            event.position,
                           );
                         }
+
                         if (state.maximized != null) {
                           maximized = null;
-                          RenderBox? layerRenderBox = _viewport
+
+                          final layerRenderBox = _viewport
                               ?.navigator._state.context
                               .findRenderObject() as RenderBox?;
-                          if (layerRenderBox != null) {
-                            Offset layerLocal = layerRenderBox
-                                .globalToLocal(details.globalPosition);
 
-                            // Get the current monitor to subtract its offset
-                            final monitor = _viewport?.navigator._state.getMonitor(state.monitorId);
+                          if (layerRenderBox != null) {
+                            final layerLocal =
+                                layerRenderBox.globalToLocal(event.position);
+
+                            final monitor =
+                                _viewport?.navigator._state.getMonitor(state.monitorId);
                             final monitorOffset = monitor?.bounds.topLeft ?? Offset.zero;
 
-                            Size titleSize = Size(this.bounds.width, titleBarHeight);
+                            final titleSize =
+                                Size(this.bounds.width, titleBarHeight);
 
-                            // Adjust for monitor offset
                             this.bounds = Rect.fromLTWH(
                               layerLocal.dx - titleSize.width / 2 - monitorOffset.dx,
                               layerLocal.dy - titleSize.height / 2 - monitorOffset.dy,
@@ -1174,39 +1185,51 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
                           }
                         }
                       },
-                      onPanUpdate: (details) {
-                        bounds = bounds.translate(
-                          details.delta.dx,
-                          details.delta.dy,
-                        );
+
+                      onPointerMove: (event) {
+                        if (event.pointer != _dragPointer) return;
+                        if (_lastGlobalPos == null) return;
+
+                        final delta = event.position - _lastGlobalPos!;
+                        _lastGlobalPos = event.position;
+
+                        bounds = bounds.translate(delta.dx, delta.dy);
+
                         if (_entry != null) {
                           _viewport?.navigator._state._updateDraggingWindow(
                             _entry!,
-                            details.globalPosition,
+                            event.position,
                           );
                         }
                       },
-                      onPanEnd: (details) {
+
+                      onPointerUp: (event) {
+                        if (event.pointer != _dragPointer) return;
+
                         if (_entry != null) {
-                          _viewport?.navigator._state._stopDraggingWindow(
-                            _entry!,
-                          );
+                          _viewport?.navigator._state._stopDraggingWindow(_entry!);
                         }
+
+                        _dragPointer = null;
+                        _lastGlobalPos = null;
                         _dragAlignment = null;
                       },
-                      onPanCancel: () {
+
+                      onPointerCancel: (event) {
+                        if (event.pointer != _dragPointer) return;
+
                         if (_entry != null) {
-                          _viewport?.navigator._state._stopDraggingWindow(
-                            _entry!,
-                          );
+                          _viewport?.navigator._state._stopDraggingWindow(_entry!);
                         }
+
+                        _dragPointer = null;
+                        _lastGlobalPos = null;
                         _dragAlignment = null;
                       },
+
                       child: Container(
                         height: titleBarHeight,
-                        padding: EdgeInsets.all(
-                          2 * theme.scaling,
-                        ),
+                        padding: EdgeInsets.all(2 * theme.scaling),
                         child: Row(
                           children: [
                             Expanded(
@@ -1216,8 +1239,7 @@ class _WindowWidgetState extends State<WindowWidget> with WindowHandle {
                                 ),
                                 child: (_viewport?.focused ?? true)
                                     ? (widget.title ?? const SizedBox())
-                                    : (widget.title ?? const SizedBox())
-                                        .muted(),
+                                    : (widget.title ?? const SizedBox()).muted(),
                               ),
                             ),
                             if (widget.actions != null) widget.actions!,
