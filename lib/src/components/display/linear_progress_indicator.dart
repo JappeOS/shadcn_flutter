@@ -442,7 +442,7 @@ double? _lerpDouble(double? a, double? b, double t) {
 
 class _LinearProgressIndicatorPainter extends CustomPainter {
   static final gradientTransform =
-      (Matrix4.identity()..scaleByDouble(1.0, 0.5, 1, 1)).storage;
+      (Matrix4.identity()..scale(1.0, 0.5, 1)).storage;
 
   final double start;
   final double end;

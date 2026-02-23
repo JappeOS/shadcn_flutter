@@ -1458,7 +1458,7 @@ class ButtonState<T extends Button> extends State<T> {
           ? WidgetStateProperty.resolveWith((states) {
               if (states.contains(WidgetState.pressed)) {
                 // scale down to 95% with alignment at center
-                return Matrix4.identity()..scaleByDouble(0.95, 0.95, 0.95, 1);
+                return Matrix4.identity()..scale(0.95, 0.95, 0.95);
               }
               return null;
             })

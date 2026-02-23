@@ -1500,13 +1500,13 @@ class PopoverLayoutRender extends RenderShiftedBox {
     }
     Matrix4 transform = Matrix4.identity();
     Offset alignmentTranslation = scaleAlignment.alongSize(childSize);
-    transform.translateByDouble(childOffset.dx, childOffset.dy, 0, 1);
-    transform.translateByDouble(
-        alignmentTranslation.dx, alignmentTranslation.dy, 0, 1);
-    transform.scaleByDouble(_scale, _scale, 1, 1);
-    transform.translateByDouble(
-        -alignmentTranslation.dx, -alignmentTranslation.dy, 0, 1);
-    transform.translateByDouble(-childOffset.dx, -childOffset.dy, 0, 1);
+    transform.translate(childOffset.dx, childOffset.dy, 0);
+    transform.translate(
+        alignmentTranslation.dx, alignmentTranslation.dy, 0);
+    transform.scale(_scale, _scale, 1);
+    transform.translate(
+        -alignmentTranslation.dx, -alignmentTranslation.dy, 0);
+    transform.translate(-childOffset.dx, -childOffset.dy, 0);
     return transform;
   }
 
@@ -1558,7 +1558,7 @@ class PopoverLayoutRender extends RenderShiftedBox {
         final Matrix4 effectiveTransform =
             Matrix4.translationValues(offset.dx, offset.dy, 0.0)
               ..multiply(transform)
-              ..translateByDouble(-offset.dx, -offset.dy, 0, 1);
+              ..translate(-offset.dx, -offset.dy, 0);
         final ui.ImageFilter filter = ui.ImageFilter.matrix(
           effectiveTransform.storage,
           filterQuality: _filterQuality!,

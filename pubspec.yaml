@@ -27,6 +27,7 @@ dependencies:
   expressions: ^0.2.5+2
   animation_kit: ^0.0.2
   yaru_window: ^0.2.2
+  vector_math: ^2.1.4
 
 dev_dependencies:
   flutter_test:
