@@ -234,7 +234,7 @@ class _HeaderBarState extends State<HeaderBar> {
             color: backgroundColor,
             border: border,
           ),
-          padding: EdgeInsets.symmetric(horizontal: 4 * theme.scaling),
+          padding: EdgeInsets.symmetric(horizontal: 8 * theme.scaling),
           height: widget.preferredSize.height,
           child: Row(
             mainAxisAlignment: widget.centerTitle == true ? MainAxisAlignment.center : MainAxisAlignment.start,
@@ -242,7 +242,7 @@ class _HeaderBarState extends State<HeaderBar> {
             children: [
               if (widget.leading != null) ...[
                 backdropEffect(widget.leading)!,
-                const SizedBox(width: 8),
+                Gap(8 * theme.scaling),
               ],
               if (widget.title != null)
                 Expanded(
@@ -250,6 +250,7 @@ class _HeaderBarState extends State<HeaderBar> {
                     Text(
                       widget.title!,
                       style: titleTextStyle,
+                      textAlign: widget.centerTitle == true ? TextAlign.center : TextAlign.start,
                     ),
                   )!,
                 ),
@@ -259,7 +260,9 @@ class _HeaderBarState extends State<HeaderBar> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Gap(8 * theme.scaling),
                         ...?widget.actions,
+                        Gap(8 * theme.scaling),
                         buildWindowControls(),
                       ],
                     ),
