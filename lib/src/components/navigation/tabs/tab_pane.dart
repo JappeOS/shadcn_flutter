@@ -429,105 +429,108 @@ class TabPaneState<T> extends State<TabPane<T>> {
                   ),
                 ),
                 Flexible(
-                  child: FadeScroll(
-                    startOffset: resolvedBorderRadius.bottomLeft.x,
-                    endOffset: resolvedBorderRadius.bottomRight.x,
-                    gradient: [
-                      Colors.white.withAlpha(0),
-                    ],
-                    endCrossOffset: border?.width ?? 1,
-                    controller: _scrollController,
-                    child: ClipRect(
-                      clipper: _ClipRectWithAdjustment(border?.width ?? 1),
-                      child: SortableLayer(
-                        clipBehavior: Clip.none,
-                        lock: true,
-                        child: SortableDropFallback<T>(
-                          onAccept: (value) {
-                            if (value is! TabPaneData<T>) {
-                              return;
-                            }
-                            bool wasFocused = widget.focused == value.data;
-                            List<TabPaneData<T>> tabs = widget.items;
-                            tabs.swapItem(value, tabs.length);
-                            widget.onSort?.call(tabs);
-                            if (wasFocused) {
-                              widget.onFocused(tabs.length - 1);
-                            }
-                          },
-                          child: ScrollableSortableLayer(
-                            controller: _scrollController,
-                            child: TabContainer(
-                              selected: widget.focused,
-                              onSelect: widget.onFocused,
-                              builder: (context, children) {
-                                return ListView.separated(
-                                  controller: _scrollController,
-                                  scrollDirection: Axis.horizontal,
-                                  clipBehavior: Clip.none,
-                                  padding: EdgeInsets.only(
-                                    left: resolvedBorderRadius.bottomLeft.x,
-                                    right: resolvedBorderRadius.bottomRight.x,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        widget.onFocused(index);
-                                      },
-                                      child: Sortable<T>(
-                                        key: ValueKey(index),
-                                        data: widget.items[index],
-                                        enabled: widget.onSort != null,
-                                        onDragStart: () {
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 6 * theme.scaling),
+                    child: FadeScroll(
+                      startOffset: resolvedBorderRadius.bottomLeft.x,
+                      endOffset: resolvedBorderRadius.bottomRight.x,
+                      gradient: [
+                        Colors.white.withAlpha(0),
+                      ],
+                      endCrossOffset: border?.width ?? 1,
+                      controller: _scrollController,
+                      child: ClipRect(
+                        clipper: _ClipRectWithAdjustment(border?.width ?? 1),
+                        child: SortableLayer(
+                          clipBehavior: Clip.none,
+                          lock: true,
+                          child: SortableDropFallback<T>(
+                            onAccept: (value) {
+                              if (value is! TabPaneData<T>) {
+                                return;
+                              }
+                              bool wasFocused = widget.focused == value.data;
+                              List<TabPaneData<T>> tabs = widget.items;
+                              tabs.swapItem(value, tabs.length);
+                              widget.onSort?.call(tabs);
+                              if (wasFocused) {
+                                widget.onFocused(tabs.length - 1);
+                              }
+                            },
+                            child: ScrollableSortableLayer(
+                              controller: _scrollController,
+                              child: TabContainer(
+                                selected: widget.focused,
+                                onSelect: widget.onFocused,
+                                builder: (context, children) {
+                                  return ListView.separated(
+                                    controller: _scrollController,
+                                    scrollDirection: Axis.horizontal,
+                                    clipBehavior: Clip.none,
+                                    padding: EdgeInsets.only(
+                                      left: resolvedBorderRadius.bottomLeft.x,
+                                      right: resolvedBorderRadius.bottomRight.x,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return GestureDetector(
+                                        onTap: () {
                                           widget.onFocused(index);
                                         },
-                                        onAcceptLeft: (value) {
-                                          if (value is! TabPaneData<T>) {
-                                            return;
-                                          }
-                                          List<TabPaneData<T>> tabs =
-                                              widget.items;
-                                          tabs.swapItem(value, index);
-                                          widget.onSort?.call(tabs);
-                                          widget.onFocused(index);
-                                        },
-                                        onAcceptRight: (value) {
-                                          if (value is! TabPaneData<T>) {
-                                            return;
-                                          }
-                                          List<TabPaneData<T>> tabs =
-                                              widget.items;
-                                          tabs.swapItem(value, index + 1);
-                                          widget.onSort?.call(tabs);
-                                          widget.onFocused(index);
-                                        },
-                                        ghost: Data.inherit(
-                                          data: _TabGhostData(),
+                                        child: Sortable<T>(
+                                          key: ValueKey(index),
+                                          data: widget.items[index],
+                                          enabled: widget.onSort != null,
+                                          onDragStart: () {
+                                            widget.onFocused(index);
+                                          },
+                                          onAcceptLeft: (value) {
+                                            if (value is! TabPaneData<T>) {
+                                              return;
+                                            }
+                                            List<TabPaneData<T>> tabs =
+                                                widget.items;
+                                            tabs.swapItem(value, index);
+                                            widget.onSort?.call(tabs);
+                                            widget.onFocused(index);
+                                          },
+                                          onAcceptRight: (value) {
+                                            if (value is! TabPaneData<T>) {
+                                              return;
+                                            }
+                                            List<TabPaneData<T>> tabs =
+                                                widget.items;
+                                            tabs.swapItem(value, index + 1);
+                                            widget.onSort?.call(tabs);
+                                            widget.onFocused(index);
+                                          },
+                                          ghost: Data.inherit(
+                                            data: _TabGhostData(),
+                                            child: children[index],
+                                          ),
                                           child: children[index],
                                         ),
-                                        child: children[index],
-                                      ),
-                                    );
-                                  },
-                                  separatorBuilder: (context, index) {
-                                    bool beforeIsFocused =
-                                        widget.focused == index;
-                                    bool afterIsFocused =
-                                        widget.focused == index + 1;
-                                    if (!beforeIsFocused && !afterIsFocused) {
-                                      return VerticalDivider(
-                                        indent: 8 * theme.scaling,
-                                        endIndent: 8 * theme.scaling,
-                                        width: 8 * theme.scaling,
                                       );
-                                    }
-                                    return SizedBox(width: 8 * theme.scaling);
-                                  },
-                                  itemCount: children.length,
-                                );
-                              },
-                              childBuilder: _childBuilder,
-                              children: _buildTabItems(),
+                                    },
+                                    separatorBuilder: (context, index) {
+                                      bool beforeIsFocused =
+                                          widget.focused == index;
+                                      bool afterIsFocused =
+                                          widget.focused == index + 1;
+                                      if (!beforeIsFocused && !afterIsFocused) {
+                                        return VerticalDivider(
+                                          indent: 8 * theme.scaling,
+                                          endIndent: 8 * theme.scaling,
+                                          width: 8 * theme.scaling,
+                                        );
+                                      }
+                                      return SizedBox(width: 8 * theme.scaling);
+                                    },
+                                    itemCount: children.length,
+                                  );
+                                },
+                                childBuilder: _childBuilder,
+                                children: _buildTabItems(),
+                              ),
                             ),
                           ),
                         ),
