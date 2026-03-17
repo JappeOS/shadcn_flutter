@@ -164,7 +164,7 @@ class _HeaderBarState extends State<HeaderBar> {
       );
     }
 
-    final closeButton = _ShadeWindowControl(
+    final closeButton = ShadeWindowControl(
       icon: Icons.close_sharp,
       onTap: widget.onClose != null ? () => widget.onClose!(context) : null,
     );
@@ -178,17 +178,17 @@ class _HeaderBarState extends State<HeaderBar> {
         spacing: bSpacing,
         children: [
           if (widget.isMinimizable == true)
-            _ShadeWindowControl(
+            ShadeWindowControl(
               icon: Icons.minimize_sharp,
               onTap: widget.onMinimize != null ? () => widget.onMinimize!(context) : null,
             ),
           if (widget.isRestorable == true)
-            _ShadeWindowControl(
+            ShadeWindowControl(
               icon: Icons.fullscreen_exit_sharp,
               onTap: widget.onRestore != null ? () => widget.onRestore!(context) : null,
             ),
           if (widget.isMaximizable == true)
-            _ShadeWindowControl(
+            ShadeWindowControl(
               icon: Icons.square_outlined,
               onTap: widget.onMaximize != null ? () => widget.onMaximize!(context) : null,
             ),
@@ -276,11 +276,11 @@ class _HeaderBarState extends State<HeaderBar> {
   }
 }
 
-class _ShadeWindowControl extends StatelessWidget {
+class ShadeWindowControl extends StatelessWidget {
   final IconData icon;
   final Function()? onTap;
 
-  const _ShadeWindowControl({
+  const ShadeWindowControl({
     required this.icon,
     required this.onTap,
   });
