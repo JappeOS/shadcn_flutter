@@ -255,18 +255,20 @@ class _HeaderBarState extends State<HeaderBar> {
                   )!,
                 ),
               if (widget.actions != null || widget.isMinimizable == true || widget.isRestorable == true || widget.isMaximizable == true || widget.isClosable == true)
-                maybeHero(
-                  child: backdropEffect(
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Gap(8 * theme.scaling),
-                        ...?widget.actions,
-                        Gap(8 * theme.scaling),
-                        buildWindowControls(),
-                      ],
-                    ),
-                  )!,
+                Expanded(
+                  child: maybeHero(
+                    child: backdropEffect(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Gap(8 * theme.scaling),
+                          ...?widget.actions,
+                          Gap(8 * theme.scaling),
+                          buildWindowControls(),
+                        ],
+                      ),
+                    )!,
+                  ),
                 ),
             ],
           ),
