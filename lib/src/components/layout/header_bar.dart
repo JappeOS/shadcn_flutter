@@ -245,7 +245,7 @@ class _HeaderBarState extends State<HeaderBar> {
                 Gap(8 * theme.scaling),
               ],
               if (widget.title != null)
-                if (widget.centerTitle == true)
+                if (widget.centerTitle == true) ...[
                   Expanded(
                     child: backdropEffect(
                       Text(
@@ -255,7 +255,9 @@ class _HeaderBarState extends State<HeaderBar> {
                       ),
                     )!,
                   )
-                else
+                ]
+                else ...[
+                  Gap(8 * theme.scaling),
                   backdropEffect(
                     Text(
                       widget.title!,
@@ -263,6 +265,7 @@ class _HeaderBarState extends State<HeaderBar> {
                       textAlign: TextAlign.start,
                     ),
                   )!,
+                ],
 
               if (widget.actions != null || widget.isMinimizable == true || widget.isRestorable == true || widget.isMaximizable == true || widget.isClosable == true)
                 Expanded(
