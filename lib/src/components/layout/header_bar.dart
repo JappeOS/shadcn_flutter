@@ -142,7 +142,7 @@ class _HeaderBarState extends State<HeaderBar> {
     final border = Border(bottom: widget.backgroundColor == Colors.transparent ? BorderSide.none : defaultBorder);
     //final shape = border + (const Border());
 
-    const bSpacing = 0.0;
+    final bSpacing = 4.0 * theme.scaling;
     final bPadding = EdgeInsets.only(left: 4 * theme.scaling);
 
     Widget? backdropEffect(Widget? child) {
@@ -165,7 +165,7 @@ class _HeaderBarState extends State<HeaderBar> {
     }
 
     final closeButton = ShadeWindowControl(
-      icon: Icons.close_sharp,
+      icon: Icons.close_rounded,
       onTap: widget.onClose != null ? () => widget.onClose!(context) : null,
     );
 
@@ -179,17 +179,17 @@ class _HeaderBarState extends State<HeaderBar> {
         children: [
           if (widget.isMinimizable == true)
             ShadeWindowControl(
-              icon: Icons.minimize_sharp,
+              icon: Icons.minimize_rounded,
               onTap: widget.onMinimize != null ? () => widget.onMinimize!(context) : null,
             ),
           if (widget.isRestorable == true)
             ShadeWindowControl(
-              icon: Icons.fullscreen_exit_sharp,
+              icon: Icons.fullscreen_exit_rounded,
               onTap: widget.onRestore != null ? () => widget.onRestore!(context) : null,
             ),
           if (widget.isMaximizable == true)
             ShadeWindowControl(
-              icon: Icons.square_outlined,
+              icon: Icons.crop_square_rounded,
               onTap: widget.onMaximize != null ? () => widget.onMaximize!(context) : null,
             ),
           if (widget.isClosable == true)
