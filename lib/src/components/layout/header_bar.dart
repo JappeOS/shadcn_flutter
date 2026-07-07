@@ -20,6 +20,9 @@ class HeaderBar extends StatefulWidget implements PreferredSizeWidget {
   /// Widgets to display after the [title] widget.
   final List<Widget>? actions;
 
+  /// Whether the actions should be centered.
+  final bool centerActions;
+
   /// Whether the title should be centered.
   final bool? centerTitle;
 
@@ -88,6 +91,7 @@ class HeaderBar extends StatefulWidget implements PreferredSizeWidget {
       this.title,
       this.leading,
       this.actions,
+      this.centerActions = false,
       this.centerTitle = true,
       this.titleSpacing,
       this.backgroundColor,
@@ -274,10 +278,20 @@ class _HeaderBarState extends State<HeaderBar> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          if (widget.centerActions)
+                            Spacer(),
                           Gap(8 * theme.scaling),
                           ...?widget.actions,
                           Gap(8 * theme.scaling),
-                          buildWindowControls(),
+                          if (widget.centerActions)
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: buildWindowControls(),
+                              ),
+                            )
+                          else
+                            buildWindowControls(),
                         ],
                       ),
                     )!,
@@ -378,6 +392,7 @@ class WindowHeaderBar extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.title,
     this.actions,
+    this.centerActions = false,
     this.centerTitle,
     this.titleSpacing,
     this.backgroundColor,
@@ -404,6 +419,9 @@ class WindowHeaderBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Widgets to display after the [title] widget.
   final List<Widget>? actions;
+
+  /// Whether the actions should be centered.
+  final bool centerActions;
 
   /// Whether the title should be centered.
   final bool? centerTitle;
@@ -484,6 +502,7 @@ class WindowHeaderBar extends StatelessWidget implements PreferredSizeWidget {
           leading: leading,
           title: title ?? state?.title ?? '',
           actions: actions,
+          centerActions: centerActions,
           centerTitle: centerTitle,
           titleSpacing: titleSpacing,
           backgroundColor: backgroundColor,
