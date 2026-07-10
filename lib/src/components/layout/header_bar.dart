@@ -512,7 +512,10 @@ class WindowHeaderBar extends StatelessWidget implements PreferredSizeWidget {
           isActive: isActive ?? state?.isActive,
           isClosable: isClosable ?? state?.isClosable,
           isDraggable: isDraggable ?? state?.isMovable,
-          isMaximizable: isMaximizable ?? state?.isMaximizable,
+          isMaximizable: isMaximizable
+              ?? (state?.isFullscreen == null || state?.isMaximizable == null
+                  ? null
+                  : (!state!.isFullscreen! && state.isMaximizable!)),
           isMinimizable: isMinimizable ?? state?.isMinimizable,
           isRestorable: isRestorable ?? state?.isRestorable,
           onClose: onClose,
