@@ -480,9 +480,12 @@ class WindowHeaderBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => Size(0, (leading == null && actions == null) ? _kDefaultHeaderbarHeight : _kPopulatedHeaderbarHeight);
 
   /// Ensures that the window is initialized.
-  static Future<void> ensureInitialized() {
+  static Future<YaruWindowInstance> ensureInitialized() {
     _windowStates.clear();
-    return YaruWindow.ensureInitialized().then((window) => window.hideTitle());
+    return YaruWindow.ensureInitialized().then((window) {
+      window.hideTitle();
+      return window;
+    });
   }
 
   static final _windowStates = <YaruWindowInstance, YaruWindowState>{};
