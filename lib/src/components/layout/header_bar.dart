@@ -116,20 +116,32 @@ class HeaderBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _HeaderBarState extends State<HeaderBar> {
+  late final _closeButton = ShadeWindowControl(
+    icon: Icons.close_rounded,
+    onTap: widget.onClose != null ? () => widget.onClose!(context) : null,
+  );
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final light = theme.colorScheme.isLight;
+
     final states = <WidgetState>{
       if (widget.isActive != false) WidgetState.focused,
     };
+
     final defaultBackgroundColor = WidgetStateProperty.resolveWith((states) {
       if (!states.contains(WidgetState.focused)) {
         return theme.colorScheme.background;
       }
-      return light ? theme.colorScheme.background/*.withLuminance(0.5)*/ : theme.colorScheme.background/*.withLuminance(0.5)*/; // TODO
+      return light
+          ? theme.colorScheme.background/*.withLuminance(0.5)*/
+          : theme.colorScheme.background/*.withLuminance(0.5)*/; // TODO
     });
-    final backgroundColor = WidgetStateProperty.resolveAs(widget.backgroundColor, states) ?? defaultBackgroundColor.resolve(states);
+
+    final backgroundColor = WidgetStateProperty.resolveAs(widget.backgroundColor, states)
+        ?? defaultBackgroundColor.resolve(states);
+
     final foregroundColor = theme.colorScheme.foreground;
 
     final titleTextStyle = (theme.typography.medium).copyWith(
@@ -141,73 +153,18 @@ class _HeaderBarState extends State<HeaderBar> {
 
     final defaultBorder = BorderSide(
       strokeAlign: -1,
-      color: light ? Colors.black.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.06),
+      color: light
+          ? Colors.black.withValues(alpha: 0.1)
+          : Colors.white.withValues(alpha: 0.06),
     );
-    final border = Border(bottom: widget.backgroundColor == Colors.transparent ? BorderSide.none : defaultBorder);
-    //final shape = border + (const Border());
 
-    final bSpacing = 4.0 * theme.scaling;
-    final bPadding = EdgeInsets.only(left: 4 * theme.scaling);
-
-    Widget? backdropEffect(Widget? child) {
-      if (child == null) return null;
-      return AnimatedOpacity(
-        opacity: widget.isActive == true ? 1 : 0.75,
-        duration: const Duration(milliseconds: 100),
-        child: child,
-      );
-    }
-
-    Widget maybeHero({required Widget child}) {
-      if (widget.heroTag == null || context.findAncestorWidgetOfExactType<Hero>() != null) {
-        return child;
-      }
-      return Hero(
-        tag: widget.heroTag!,
-        child: child,
-      );
-    }
-
-    final closeButton = ShadeWindowControl(
-      icon: Icons.close_rounded,
-      onTap: widget.onClose != null ? () => widget.onClose!(context) : null,
+    final border = Border(
+      bottom: widget.backgroundColor == Colors.transparent
+          ? BorderSide.none
+          : defaultBorder
     );
 
     final gestureSettings = MediaQuery.maybeOf(context)?.gestureSettings;
-
-    Widget buildWindowControls() => Padding(
-      padding: bPadding,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        spacing: bSpacing,
-        children: [
-          if (widget.isMinimizable == true)
-            ShadeWindowControl(
-              icon: Icons.minimize_rounded,
-              onTap: widget.onMinimize != null ? () => widget.onMinimize!(context) : null,
-            ),
-          if (widget.isRestorable == true)
-            ShadeWindowControl(
-              icon: Icons.fullscreen_exit_rounded,
-              onTap: widget.onRestore != null ? () => widget.onRestore!(context) : null,
-            ),
-          if (widget.isMaximizable == true)
-            ShadeWindowControl(
-              icon: Icons.crop_square_rounded,
-              onTap: widget.onMaximize != null ? () => widget.onMaximize!(context) : null,
-            ),
-          if (widget.isClosable == true)
-            widget.isMaximizable == true
-                ? closeButton
-                : ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(6),
-                    ),
-                    child: closeButton,
-                  ),
-        ],
-      ),
-    );
 
     return TextFieldTapRegion(
       child: RawGestureDetector(
@@ -229,7 +186,9 @@ class _HeaderBarState extends State<HeaderBar> {
                   : widget.isRestorable == true
                       ? widget.onRestore?.call(context)
                       : null)
-              ..onSecondaryTap = widget.onShowMenu != null ? () => widget.onShowMenu!(context) : null
+              ..onSecondaryTap = widget.onShowMenu != null
+                  ? () => widget.onShowMenu!(context)
+                  : null
               ..gestureSettings = gestureSettings,
           ),
         },
@@ -241,17 +200,16 @@ class _HeaderBarState extends State<HeaderBar> {
           padding: EdgeInsets.symmetric(horizontal: 8 * theme.scaling),
           height: widget.preferredSize.height,
           child: Row(
-            mainAxisAlignment: widget.centerTitle == true ? MainAxisAlignment.center : MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.max,
             children: [
               if (widget.leading != null) ...[
-                backdropEffect(widget.leading)!,
+                _backdropEffect(widget.leading)!,
                 Gap(8 * theme.scaling),
               ],
               if (widget.title != null)
-                if (widget.centerTitle == true) ...[
+                if (widget.centerTitle == true && !widget.centerActions) ...[
                   Expanded(
-                    child: backdropEffect(
+                    child: _backdropEffect(
                       Text(
                         widget.title!,
                         style: titleTextStyle,
@@ -262,7 +220,7 @@ class _HeaderBarState extends State<HeaderBar> {
                 ]
                 else ...[
                   Gap(8 * theme.scaling),
-                  backdropEffect(
+                  _backdropEffect(
                     Text(
                       widget.title!,
                       style: titleTextStyle,
@@ -270,13 +228,20 @@ class _HeaderBarState extends State<HeaderBar> {
                     ),
                   )!,
                 ],
-
-              if (widget.actions != null || widget.isMinimizable == true || widget.isRestorable == true || widget.isMaximizable == true || widget.isClosable == true)
-                Expanded(
-                  child: maybeHero(
-                    child: backdropEffect(
+              if (widget.actions != null ||
+                  widget.isMinimizable == true ||
+                  widget.isRestorable == true ||
+                  widget.isMaximizable == true ||
+                  widget.isClosable == true)
+                _maybeExpanded(
+                  condition: widget.centerActions,
+                  child: _maybeHero(
+                    child: _backdropEffect(
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: widget.centerActions
+                            ? MainAxisSize.max
+                            : MainAxisSize.min,
                         children: [
                           if (widget.centerActions)
                             Spacer(),
@@ -287,11 +252,11 @@ class _HeaderBarState extends State<HeaderBar> {
                             Expanded(
                               child: Align(
                                 alignment: Alignment.centerRight,
-                                child: buildWindowControls(),
+                                child: _buildWindowControls(),
                               ),
                             )
                           else
-                            buildWindowControls(),
+                            _buildWindowControls(),
                         ],
                       ),
                     )!,
@@ -300,6 +265,77 @@ class _HeaderBarState extends State<HeaderBar> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget? _backdropEffect(Widget? child) {
+    if (child == null) return null;
+    return AnimatedOpacity(
+      opacity: widget.isActive == true ? 1 : 0.75,
+      duration: const Duration(milliseconds: 100),
+      child: child,
+    );
+  }
+
+  Widget _maybeHero({required Widget child}) {
+    if (widget.heroTag == null || context.findAncestorWidgetOfExactType<Hero>() != null) {
+      return child;
+    }
+    return Hero(
+      tag: widget.heroTag!,
+      child: child,
+    );
+  }
+
+  Widget _maybeExpanded({required bool condition, required Widget child}) {
+    if (condition) {
+      return Expanded(child: child);
+    }
+    return child;
+  }
+
+  Widget _buildWindowControls() {
+    final theme = Theme.of(context);
+    final bSpacing = 4.0 * theme.scaling;
+    final bPadding = EdgeInsets.only(left: 4 * theme.scaling);
+    return Padding(
+      padding: bPadding,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        spacing: bSpacing,
+        children: [
+          if (widget.isMinimizable == true)
+            ShadeWindowControl(
+              icon: Icons.minimize_rounded,
+              onTap: widget.onMinimize != null
+                  ? () => widget.onMinimize!(context)
+                  : null,
+            ),
+          if (widget.isRestorable == true)
+            ShadeWindowControl(
+              icon: Icons.fullscreen_exit_rounded,
+              onTap: widget.onRestore != null
+                  ? () => widget.onRestore!(context)
+                  : null,
+            ),
+          if (widget.isMaximizable == true)
+            ShadeWindowControl(
+              icon: Icons.crop_square_rounded,
+              onTap: widget.onMaximize != null
+                  ? () => widget.onMaximize!(context)
+                  : null,
+            ),
+          if (widget.isClosable == true)
+            widget.isMaximizable == true
+                ? _closeButton
+                : ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(6),
+                    ),
+                    child: _closeButton,
+                  ),
+        ],
       ),
     );
   }
