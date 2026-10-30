@@ -166,6 +166,16 @@ class _HeaderBarState extends State<HeaderBar> {
 
     final gestureSettings = MediaQuery.maybeOf(context)?.gestureSettings;
 
+    final hasTrailing = widget.actions != null ||
+        widget.isMinimizable == true ||
+        widget.isRestorable == true ||
+        widget.isMaximizable == true ||
+        widget.isClosable == true;
+
+    final leading = _backdropEffect(widget.leading);
+
+    final middleSpacing = 8 * theme.scaling;
+
     return TextFieldTapRegion(
       child: RawGestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -199,71 +209,57 @@ class _HeaderBarState extends State<HeaderBar> {
           ),
           padding: EdgeInsets.symmetric(horizontal: 8 * theme.scaling),
           height: widget.preferredSize.height,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              if (widget.leading != null) ...[
-                _backdropEffect(widget.leading)!,
-                Gap(8 * theme.scaling),
-              ],
-              if (widget.title != null)
-                if (widget.centerTitle == true && !widget.centerActions) ...[
-                  Expanded(
-                    child: _backdropEffect(
-                      Text(
-                        widget.title!,
-                        style: titleTextStyle,
-                        textAlign: TextAlign.center,
-                      ),
-                    )!,
-                  )
-                ]
-                else ...[
-                  Gap(8 * theme.scaling),
-                  _backdropEffect(
-                    Text(
-                      widget.title!,
-                      style: titleTextStyle,
-                      textAlign: TextAlign.start,
-                    ),
-                  )!,
-                ],
-              if (widget.actions != null ||
-                  widget.isMinimizable == true ||
-                  widget.isRestorable == true ||
-                  widget.isMaximizable == true ||
-                  widget.isClosable == true)
-                _maybeExpanded(
-                  condition: widget.centerActions,
-                  child: _maybeHero(
+          child: widget.centerActions
+              ? NavigationToolbar(
+                  leading: leading,
+                  middle: _maybeHero(
                     child: _backdropEffect(
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: widget.centerActions
-                            ? MainAxisSize.max
-                            : MainAxisSize.min,
-                        children: [
-                          if (widget.centerActions)
-                            Spacer(),
-                          Gap(8 * theme.scaling),
-                          ...?widget.actions,
-                          Gap(8 * theme.scaling),
-                          if (widget.centerActions)
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: _buildWindowControls(),
-                              ),
-                            )
-                          else
-                            _buildWindowControls(),
-                        ],
+                        mainAxisSize: MainAxisSize.min,
+                        children: widget.actions ?? const [],
                       ),
                     )!,
                   ),
+                  trailing: _maybeHero(
+                    child: _backdropEffect(
+                      _buildWindowControls(),
+                    )!,
+                  ),
+                  centerMiddle: true,
+                  middleSpacing: middleSpacing,
+                )
+              : NavigationToolbar(
+                  leading: leading,
+                  middle: widget.title == null
+                      ? null
+                      : _backdropEffect(
+                          Text(
+                            widget.title!,
+                            style: titleTextStyle,
+                            maxLines: 1,
+                            textAlign: widget.centerTitle == true
+                                ? TextAlign.center
+                                : TextAlign.start,
+                          ),
+                        ),
+                  trailing: !hasTrailing
+                      ? null
+                      : _maybeHero(
+                          child: _backdropEffect(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Gap(8 * theme.scaling),
+                                ...?widget.actions,
+                                Gap(8 * theme.scaling),
+                                _buildWindowControls(),
+                              ],
+                            ),
+                          )!,
+                        ),
+                  centerMiddle: widget.centerTitle == true,
+                  middleSpacing: middleSpacing,
                 ),
-            ],
-          ),
         ),
       ),
     );
@@ -286,13 +282,6 @@ class _HeaderBarState extends State<HeaderBar> {
       tag: widget.heroTag!,
       child: child,
     );
-  }
-
-  Widget _maybeExpanded({required bool condition, required Widget child}) {
-    if (condition) {
-      return Expanded(child: child);
-    }
-    return child;
   }
 
   Widget _buildWindowControls() {
